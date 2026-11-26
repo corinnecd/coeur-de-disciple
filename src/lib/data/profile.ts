@@ -12,6 +12,8 @@ type Identity = {
   id: string;
   email: string;
   name: string;
+  firstName?: string;
+  lastName?: string;
 };
 
 function splitName(name: string) {
@@ -20,6 +22,42 @@ function splitName(name: string) {
     firstName: parts[0] || "Disciple",
     lastName: parts.slice(1).join(" ") || null,
   };
+}
+
+function resolveProfileName(identity: Identity) {
+  if (identity.firstName?.trim() && identity.lastName?.trim()) {
+    return {
+      firstName: identity.firstName.trim(),
+      lastName: identity.lastName.trim(),
+    };
+  }
+
+  if (typeof window !== "undefined") {
+    const pendingName = localStorage.getItem("coeur-de-disciple.pending-name");
+    if (pendingName) {
+      try {
+        const parsed = JSON.parse(pendingName) as {
+          firstName?: string;
+          lastName?: string;
+          email?: string;
+        };
+        if (
+          parsed.email?.toLowerCase() === identity.email.toLowerCase() &&
+          parsed.firstName?.trim() &&
+          parsed.lastName?.trim()
+        ) {
+          return {
+            firstName: parsed.firstName.trim(),
+            lastName: parsed.lastName.trim(),
+          };
+        }
+      } catch {
+        localStorage.removeItem("coeur-de-disciple.pending-name");
+      }
+    }
+  }
+
+  return splitName(identity.name);
 }
 
 export async function saveProfile(identity: Identity, preferences: ProfilePreferences) {
@@ -36,7 +74,7 @@ export async function saveProfile(identity: Identity, preferences: ProfilePrefer
     throw new Error(userError?.message || "Impossible de créer le profil utilisateur.");
   }
 
-  const { firstName, lastName } = splitName(identity.name);
+  const { firstName, lastName } = resolveProfileName(identity);
   const { error: profileError } = await dataClient.from("user_profiles").upsert(
     {
       user_id: user.id,
@@ -53,6 +91,9 @@ export async function saveProfile(identity: Identity, preferences: ProfilePrefer
   );
 
   if (profileError) throw new Error(profileError.message);
+  if (typeof window !== "undefined") {
+    localStorage.removeItem("coeur-de-disciple.pending-name");
+  }
 }
 
 export async function loadProfile(authUserId: string): Promise<ProfilePreferences | null> {
