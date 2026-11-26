@@ -1,30 +1,208 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowDown, BookOpen, HeartHandshake, Sprout, Users } from "lucide-react";
+import {
+  BookOpenText,
+  HeartHandshake,
+  MessageCircleHeart,
+  Play,
+  Sparkles,
+} from "lucide-react";
 
-const pillars = [
-  { icon: BookOpen, title: "Méditer la Parole", text: "Des parcours bibliques guidés pour comprendre, prier et mettre en pratique." },
-  { icon: Sprout, title: "Grandir avec constance", text: "Une progression personnelle qui encourage sans comparer ni culpabiliser." },
-  { icon: Users, title: "Marcher ensemble", text: "Un espace de groupe modéré pour partager résumés, témoignages et prières." },
+const practices = [
+  {
+    icon: BookOpenText,
+    title: "Méditer",
+    text: "Entrer dans la Parole avec un parcours guidé, clair et accessible.",
+  },
+  {
+    icon: Sparkles,
+    title: "Mettre en pratique",
+    text: "Transformer chaque lecture en un pas concret dans la vie quotidienne.",
+  },
+  {
+    icon: MessageCircleHeart,
+    title: "Partager",
+    text: "Avancer entourée, déposer une prière et célébrer chaque progrès.",
+  },
 ];
 
 export default function Home() {
-  return <main>
-    <section className="hero-shell min-h-[92vh] overflow-hidden">
-      <nav className="mx-auto flex max-w-7xl items-center justify-between px-5 py-5 sm:px-8">
-        <Link href="/" className="flex items-center gap-3" aria-label="Accueil Cœur de Disciple">
-          <Image src="/logo-coeur-de-disciple.png" alt="" width={52} height={52} className="h-12 w-12 rounded-full object-cover" priority />
-          <span className="font-display text-lg font-semibold leading-tight text-white">Cœur de<br />Disciple</span>
-        </Link>
-        <div className="hidden items-center gap-8 text-sm font-medium text-white/80 md:flex"><a href="#vision">La vision</a><a href="#parcours">Les parcours</a><a href="#communaute">La communauté</a></div>
-        <Link href="/connexion" className="rounded-full border border-white/30 bg-white/10 px-5 py-2.5 text-sm font-semibold text-white backdrop-blur transition hover:bg-white hover:text-emerald-950">Se connecter</Link>
-      </nav>
-      <div className="mx-auto grid max-w-7xl items-center gap-14 px-5 pb-20 pt-14 sm:px-8 lg:grid-cols-[1.12fr_.88fr] lg:pt-24">
-        <div><p className="mb-5 text-sm font-bold uppercase tracking-[.22em] text-amber-300">Enracinés dans la Parole</p><h1 className="font-display max-w-4xl text-5xl font-semibold leading-[1.02] tracking-[-.04em] text-white sm:text-7xl">Une foi vécue.<br /><span className="text-amber-300">Un cœur transformé.</span></h1><p className="mt-7 max-w-2xl text-lg leading-8 text-emerald-50/80 sm:text-xl">Méditez, mémorisez et avancez avec une communauté de disciples qui choisissent de mettre la Parole en pratique chaque jour.</p><div className="mt-9 flex flex-col gap-3 sm:flex-row"><Link href="/connexion" className="rounded-full bg-amber-300 px-7 py-3.5 text-center font-bold text-emerald-950 transition hover:bg-amber-200">Commencer aujourd’hui</Link><a href="#vision" className="flex items-center justify-center gap-2 rounded-full border border-white/25 px-7 py-3.5 font-semibold text-white transition hover:bg-white/10">Comprendre la vision <ArrowDown size={17} /></a></div></div>
-        <div className="relative mx-auto w-full max-w-md"><div className="absolute -inset-12 rounded-full bg-amber-300/10 blur-3xl" /><div className="relative rounded-[2rem] border border-white/15 bg-white/10 p-4 shadow-2xl backdrop-blur-xl"><div className="rounded-[1.5rem] bg-[#f8f5ed] p-6 text-emerald-950"><div className="flex items-center justify-between"><span className="text-xs font-bold uppercase tracking-widest text-emerald-700">Méditation du jour</span><span className="text-xs text-emerald-900/50">Jour 3 sur 7</span></div><p className="font-display mt-8 text-3xl font-semibold">Demeurer dans sa présence</p><p className="mt-3 text-sm font-semibold text-amber-700">Jean 15.4–5</p><p className="mt-5 leading-7 text-emerald-950/70">« Demeurez en moi, et je demeurerai en vous. »</p><div className="mt-8 h-2 overflow-hidden rounded-full bg-emerald-950/10"><div className="h-full w-[43%] rounded-full bg-emerald-700" /></div><button className="mt-5 w-full rounded-xl bg-emerald-900 py-3.5 font-bold text-white">Continuer la méditation</button></div></div></div>
+  return (
+    <main className="home-page">
+      <section className="home-hero" aria-labelledby="hero-title">
+        <Image
+          src="/hero-communaute-mixte.webp"
+          alt="Un groupe de femmes de différentes origines et générations partage un moment joyeux autour de la Bible"
+          fill
+          priority
+          sizes="100vw"
+          className="home-hero-image"
+        />
+        <div className="home-hero-shade" />
+
+        <nav className="home-nav" aria-label="Navigation principale">
+          <Link href="/" className="home-brand" aria-label="Accueil Cœur de Disciple">
+            <Image
+              src="/logo-coeur-de-disciple.png"
+              alt=""
+              width={46}
+              height={46}
+              className="home-brand-logo"
+            />
+            <span>Cœur de Disciple</span>
+          </Link>
+          <div className="home-nav-links">
+            <a href="#vision">La vision</a>
+            <a href="#parcours">Le parcours</a>
+            <a href="#communaute">La communauté</a>
+          </div>
+          <Link href="/connexion" className="home-nav-cta">
+            Se connecter
+          </Link>
+        </nav>
+
+        <div className="home-hero-content">
+          <p className="home-kicker home-kicker-light">Une foi qui se vit</p>
+          <h1 id="hero-title">
+            Grandir en Dieu.
+            <span>Ensemble.</span>
+          </h1>
+          <p className="home-hero-copy">
+            Un espace vivant pour méditer la Parole, fortifier sa foi et marcher
+            avec une communauté de femmes qui s’encouragent vraiment.
+          </p>
+          <div className="home-hero-actions">
+            <Link href="/connexion" className="home-button home-button-sun">
+              Commencer mon parcours
+            </Link>
+            <a href="#vision" className="home-text-link">
+              <span className="home-play"><Play size={14} fill="currentColor" /></span>
+              Découvrir la vision
+            </a>
+          </div>
+        </div>
+
+        <div className="home-hero-note" aria-label="Méditation mise en avant">
+          <span>Méditation du jour</span>
+          <strong>Demeurer dans sa présence</strong>
+          <small>Jean 15.4–5</small>
+        </div>
+
+        <div className="home-scroll-cue" aria-hidden="true">
+          <span />
+          Défiler pour découvrir
+        </div>
+      </section>
+
+      <div className="home-ribbon" aria-hidden="true">
+        <div>
+          <span>Méditer</span><i>✦</i><span>S’ancrer</span><i>✦</i>
+          <span>Oser</span><i>✦</i><span>Partager</span><i>✦</i>
+          <span>Grandir</span><i>✦</i><span>Méditer</span><i>✦</i>
+          <span>S’ancrer</span><i>✦</i><span>Oser</span><i>✦</i>
+        </div>
       </div>
-    </section>
-    <section id="vision" className="bg-[#f8f5ed] px-5 py-24 sm:px-8"><div className="mx-auto max-w-7xl"><div className="max-w-3xl"><p className="eyebrow">Notre vision</p><h2 className="section-title">De ce que je sais à ce que je pratique.</h2><p className="mt-6 text-lg leading-8 text-emerald-950/65">La transformation ne vient pas d’une accumulation de contenus. Chaque parcours relie vérité biblique, examen du cœur, prière et action concrète.</p></div><div id="parcours" className="mt-14 grid gap-5 md:grid-cols-3">{pillars.map(({ icon: Icon, title, text }, index) => <article key={title} className="rounded-3xl border border-emerald-950/10 bg-white p-7 shadow-[0_20px_60px_rgba(12,56,42,.06)]"><div className="mb-8 flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-900 text-amber-300"><Icon size={23} /></div><p className="mb-2 text-xs font-bold uppercase tracking-widest text-amber-700">0{index + 1}</p><h3 className="font-display text-2xl font-semibold text-emerald-950">{title}</h3><p className="mt-3 leading-7 text-emerald-950/60">{text}</p></article>)}</div></div></section>
-    <section id="communaute" className="bg-amber-300 px-5 py-20 sm:px-8"><div className="mx-auto flex max-w-5xl flex-col items-center text-center"><HeartHandshake className="mb-5 text-emerald-950" size={38} /><h2 className="font-display text-4xl font-semibold tracking-tight text-emerald-950 sm:text-5xl">« Moi et ma maison, nous servirons l’Éternel. »</h2><p className="mt-4 text-emerald-950/65">Josué 24.15</p></div></section>
-  </main>;
+
+      <section id="vision" className="home-manifesto">
+        <div className="home-section-shell home-manifesto-grid">
+          <div className="home-sticky-heading">
+            <p className="home-kicker">Notre vision</p>
+            <h2>La foi ne se collectionne pas. Elle se vit.</h2>
+            <p>
+              Cœur de Disciple relie la vérité biblique au cœur, puis le cœur à
+              l’action. Chaque jour devient une occasion de grandir avec grâce.
+            </p>
+          </div>
+
+          <div id="parcours" className="home-practices">
+            {practices.map(({ icon: Icon, title, text }) => (
+              <article className="home-practice" key={title}>
+                <div className="home-practice-icon"><Icon size={24} /></div>
+                <div>
+                  <h3>{title}</h3>
+                  <p>{text}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="home-hands" aria-labelledby="hands-title">
+        <Image
+          src="/mains-rencontre.webp"
+          alt="Deux mains de carnations différentes s’approchent dans une lumière dorée"
+          fill
+          sizes="100vw"
+          className="home-hands-image"
+        />
+        <div className="home-hands-shade" />
+        <div className="home-hands-copy">
+          <p className="home-kicker home-kicker-light">Une rencontre qui transforme</p>
+          <h2 id="hands-title">Entre sa main et la nôtre, il y a un pas de foi.</h2>
+          <p>
+            Dieu ne nous appelle pas à rester spectatrices. Il nous invite à
+            répondre, avancer et devenir des disciples qui portent sa lumière.
+          </p>
+          <a href="#communaute" className="home-button home-button-outline">
+            Faire ce premier pas
+          </a>
+        </div>
+      </section>
+
+      <section id="communaute" className="home-community">
+        <div className="home-section-shell">
+          <div className="home-community-heading">
+            <div>
+              <p className="home-kicker">Une communauté vivante</p>
+              <h2>Différentes histoires. Un même élan.</h2>
+            </div>
+            <p>
+              Ici, la diversité est une force. Les générations, les cultures et
+              les parcours se rencontrent pour apprendre, prier et avancer ensemble.
+            </p>
+          </div>
+
+          <div className="home-community-stage">
+            <div className="home-community-photo">
+              <Image
+                src="/hero-communaute-mixte.webp"
+                alt="Des femmes de différentes générations rient et partagent un moment de foi"
+                fill
+                sizes="(max-width: 768px) 100vw, 68vw"
+                className="home-community-image"
+              />
+              <div className="home-photo-label">
+                <HeartHandshake size={22} />
+                <span><strong>Avancer ensemble</strong>Sans comparaison. Avec bienveillance.</span>
+              </div>
+            </div>
+
+            <aside className="home-journey-card" aria-label="Exemple de parcours dans l’application">
+              <p className="home-card-label">Votre espace</p>
+              <h3>Un chemin simple, jour après jour.</h3>
+              <div className="home-card-progress"><span /></div>
+              <ul>
+                <li><span>01</span><strong>Lire</strong><small>Un passage essentiel</small></li>
+                <li><span>02</span><strong>Écouter</strong><small>Ce que Dieu révèle</small></li>
+                <li><span>03</span><strong>Agir</strong><small>Un pas concret aujourd’hui</small></li>
+              </ul>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <section className="home-final-cta">
+        <div className="home-final-orbit" aria-hidden="true" />
+        <div className="home-final-content">
+          <p className="home-kicker home-kicker-light">Prête à commencer ?</p>
+          <h2>Votre prochain pas peut changer toute la suite.</h2>
+          <p>Rejoignez Cœur de Disciple et commencez un parcours qui s’incarne dans votre quotidien.</p>
+          <Link href="/connexion" className="home-button home-button-ivory">
+            Rejoindre la communauté
+          </Link>
+        </div>
+      </section>
+    </main>
+  );
 }
