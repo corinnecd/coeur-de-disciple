@@ -1,0 +1,1 @@
+export default function Loading() { return <main className="flex min-h-screen items-center justify-center bg-[#f4f1e8]"><p className="animate-pulse font-semibold text-emerald-900/50">Chargement de votre journée…</p></main>; }

@@ -1,0 +1,1 @@
+export default function Loading() { return <main className="flex min-h-screen items-center justify-center bg-[#f8f5ed]"><p className="animate-pulse font-semibold text-emerald-900/50">Préparation de votre espace…</p></main>; }

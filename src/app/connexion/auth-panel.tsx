@@ -1,0 +1,57 @@
+"use client";
+
+import { useRouter } from "next/navigation";
+import { FormEvent, useState } from "react";
+import { CheckCircle2, LoaderCircle } from "lucide-react";
+import { authClient } from "@/lib/auth/client";
+
+type Mode = "sign-in" | "sign-up" | "verify";
+
+export function AuthPanel() {
+  const router = useRouter();
+  const [mode, setMode] = useState<Mode>("sign-in");
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+
+  async function submit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault(); setBusy(true); setError("");
+    try {
+      if (mode === "verify") {
+        const form = new FormData(event.currentTarget);
+        const otp = String(form.get("otp") ?? "").trim();
+        const verified = await authClient.emailOtp.verifyEmail({ email, otp });
+        if (verified.error) throw new Error(verified.error.message);
+        const signedIn = await authClient.signIn.email({ email, password });
+        if (signedIn.error) throw new Error(signedIn.error.message);
+        router.push("/onboarding"); router.refresh(); return;
+      }
+      if (mode === "sign-up") {
+        const result = await authClient.signUp.email({ name, email, password });
+        if (result.error) throw new Error(result.error.message);
+        setMode("verify"); return;
+      }
+      const result = await authClient.signIn.email({ email, password });
+      if (result.error) throw new Error(result.error.message);
+      router.push("/aujourdhui"); router.refresh();
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : "Une erreur est survenue. Réessayez.");
+    } finally { setBusy(false); }
+  }
+
+  async function signInWithGoogle() {
+    setBusy(true); setError("");
+    const result = await authClient.signIn.social({ provider: "google", callbackURL: "/onboarding" });
+    if (result?.error) { setError(result.error.message ?? "Connexion Google impossible."); setBusy(false); }
+  }
+
+  function switchMode(next: Mode) { setMode(next); setError(""); }
+
+  if (mode === "verify") return <div className="auth-card"><CheckCircle2 className="text-emerald-700" size={34}/><h1 className="auth-title mt-5">Vérifiez votre adresse</h1><p className="auth-copy">Un code a été envoyé à <strong>{email}</strong>. Saisissez-le pour activer votre compte.</p><form onSubmit={submit} className="mt-7 space-y-4"><label className="auth-label">Code de vérification<input className="auth-input mt-2 text-center text-xl tracking-[.35em]" name="otp" inputMode="numeric" autoComplete="one-time-code" maxLength={8} required/></label>{error && <p className="auth-error" role="alert">{error}</p>}<SubmitButton busy={busy} label="Vérifier mon compte" /></form><button onClick={() => switchMode("sign-up")} className="mt-5 w-full text-sm font-semibold text-emerald-800">Modifier l’adresse e-mail</button></div>;
+
+  return <div className="auth-card"><p className="eyebrow">Votre espace personnel</p><h1 className="auth-title">{mode === "sign-in" ? "Heureux de vous retrouver." : "Faisons le premier pas."}</h1><p className="auth-copy">{mode === "sign-in" ? "Connectez-vous pour reprendre votre parcours." : "Créez votre compte et rejoignez votre groupe de disciples."}</p><div className="mt-7 grid grid-cols-2 rounded-xl bg-emerald-950/5 p-1"><button onClick={() => switchMode("sign-in")} className={`auth-tab ${mode === "sign-in" ? "auth-tab-active" : ""}`}>Connexion</button><button onClick={() => switchMode("sign-up")} className={`auth-tab ${mode === "sign-up" ? "auth-tab-active" : ""}`}>Créer un compte</button></div><button onClick={signInWithGoogle} disabled={busy} className="mt-6 flex w-full items-center justify-center gap-3 rounded-xl border border-emerald-950/15 bg-white px-4 py-3.5 font-bold transition hover:bg-emerald-50 disabled:opacity-50"><span className="flex h-6 w-6 items-center justify-center rounded-full bg-white text-sm font-black text-[#4285f4] shadow-sm">G</span>Continuer avec Google</button><div className="my-6 flex items-center gap-3 text-xs uppercase tracking-widest text-emerald-950/35"><span className="h-px flex-1 bg-emerald-950/10"/>ou par e-mail<span className="h-px flex-1 bg-emerald-950/10"/></div><form onSubmit={submit} className="space-y-4">{mode === "sign-up" && <label className="auth-label">Prénom et nom<input className="auth-input mt-2" value={name} onChange={event => setName(event.target.value)} autoComplete="name" required/></label>}<label className="auth-label">Adresse e-mail<input className="auth-input mt-2" type="email" value={email} onChange={event => setEmail(event.target.value)} autoComplete="email" required/></label><label className="auth-label">Mot de passe<input className="auth-input mt-2" type="password" value={password} onChange={event => setPassword(event.target.value)} autoComplete={mode === "sign-up" ? "new-password" : "current-password"} minLength={8} required/></label>{error && <p className="auth-error" role="alert">{error}</p>}<SubmitButton busy={busy} label={mode === "sign-in" ? "Se connecter" : "Créer mon compte"}/></form><p className="mt-6 text-center text-xs leading-5 text-emerald-950/45">En continuant, vous acceptez la charte communautaire et la politique de confidentialité.</p></div>;
+}
+
+function SubmitButton({ busy, label }:{ busy:boolean; label:string }) { return <button disabled={busy} className="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-900 px-4 py-3.5 font-bold text-white transition hover:bg-emerald-800 disabled:opacity-60">{busy && <LoaderCircle className="animate-spin" size={18}/>} {label}</button>; }
